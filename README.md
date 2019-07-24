@@ -4,6 +4,8 @@ Bash script to use the official Lastpass CLI together with Rofi.
 
 It works like an alternative to the Lastpass browser extensions or the webapp
 
+![Demo](/images/rofi-demo.png)
+
 ## Dependencies
 
 * lastpass-cli >= 1.0.0 -> [Github](https://github.com/lastpass/lastpass-cli)
