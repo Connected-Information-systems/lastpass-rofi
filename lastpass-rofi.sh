@@ -15,10 +15,8 @@ usage()
 }
 
 # Check for required tools
-for TOOL in $REQUIRED_TOOLS
-do
-  if ! [ -x "$(command -v "$TOOL")" ]
-  then
+for TOOL in $REQUIRED_TOOLS; do
+  if ! [ -x "$(command -v "$TOOL")" ]; then
     echo "Tool not found: '$TOOL'"
     exit 1
   fi
@@ -40,26 +38,22 @@ case $1 in
     shift
 done
 
-if [ -z "$EMAIL" ]
-  then
-    echo "Mandatory argument missing"
-    echo ""
-    usage
-    exit 1
+if [ -z "$EMAIL" ]; then
+  echo "Mandatory argument missing"
+  echo ""
+  usage
+  exit 1
 fi
 
-if [ -n "$TIMEOUT" ]
-then
-  let "timeout_in_seconds=$TIMEOUT * 60 * 60"
+if [ -n "$TIMEOUT" ]; then
+  (( timeout_in_seconds=TIMEOUT * 60 * 60 ))
   export LPASS_AGENT_TIMEOUT=$timeout_in_seconds
 fi
 
-if [ -z "$MODE" ]
-then
+if [ -z "$MODE" ]; then
   MODE="password"
 else
-  if [ $MODE != 'password' ] && [ $MODE != 'username' ] && [ $MODE != 'url' ] && [ $MODE != 'notes' ]
-  then
+  if [ $MODE != 'password' ] && [ $MODE != 'username' ] && [ $MODE != 'url' ] && [ $MODE != 'notes' ]; then
     echo "Mode parameter is not correct"
     echo ""
     usage
@@ -69,14 +63,13 @@ fi
 
 status="$(lpass status)"
 
-if [ "$status" = "Not logged in." ]
-then
+if [ "$status" = "Not logged in." ]; then
   lpass login "$EMAIL"
 fi
 
 line=$(lpass ls -l | cut -c 18- | rofi -dmenu -i -p "Select the $MODE to copy" "$@")
 
-if [ $? == 0 ]; then
+if [ -n "$line" ]; then
   pass_id=$(echo "$line" | grep -Po '\[id: ([0-9]*)' | cut -d ' ' -f 2)
   echo -n "$(lpass show "$pass_id" --$MODE)" | xclip -selection clipboard
 fi
