@@ -57,6 +57,14 @@ fi
 if [ -z "$MODE" ]
 then
   MODE="password"
+else
+  if [ $MODE != 'password' ] && [ $MODE != 'username' ] && [ $MODE != 'url' ] && [ $MODE != 'notes' ]
+  then
+    echo "Mode parameter is not correct"
+    echo ""
+    usage
+    exit 1
+  fi
 fi
 
 status="$(lpass status)"
